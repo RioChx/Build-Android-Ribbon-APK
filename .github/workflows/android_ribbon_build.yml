@@ -13,28 +13,24 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 1. Set up JDK 17 AND force Gradle 8.5 Toolchain
-    - name: Set up JDK 17 and Gradle 8.5
+    # 1. Set up JDK 17 
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
-        cache: 'gradle'
-        # CRITICAL: This line forces the download and setup of Gradle 8.5
-        gradle-version: 8.5 
+        cache: 'gradle' 
 
-    # 2. Set up Android SDK
+    # 2. Set up Android SDK (Uses v3, the working version)
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
         sdk-version: '33' 
 
-    # 3. Execute Build with the Forced Gradle Version
+    # 3. Run Gradle Build (Uses the 'gradle' command which now executes AGP 8.3.2)
     - name: Run Gradle Build
       run: |
-        # Call the plain 'gradle' command. The toolchain setup above 
-        # guarantees this executes the installed 8.5 version, bypassing the 
-        # conflicting global 9.2.1 wrapper path issue.
+        # Use the plain 'gradle' command, which will execute the AGP 8.3.2 compatible build.
         gradle assembleDebug
 
     # 4. Upload the resulting APK as an artifact
