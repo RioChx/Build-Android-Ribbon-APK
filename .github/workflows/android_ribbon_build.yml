@@ -21,7 +21,7 @@ jobs:
         java-version: '17'
         cache: 'gradle' 
 
-    # 2. Set up Android SDK 
+    # 2. Set up Android SDK (UPDATED back to 33)
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
@@ -30,7 +30,6 @@ jobs:
     # 3. Run Gradle Build
     - name: Run Gradle Build
       run: |
-        # Use the system 'gradle' command, which is now compatible with all config files.
         gradle assembleDebug
 
     # 4. Upload the resulting APK as an artifact
