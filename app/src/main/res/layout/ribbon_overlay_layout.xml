@@ -1,68 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ribbon_container"
+    android:id="@+id/main_overlay_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp"
-    android:background="#80000000"
-    android:gravity="center_vertical">
-    
-    <TextView
-        android:id="@+id/clock_widget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="11:30 PM"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+    android:gravity="center_vertical"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
-    <Button
-        android:id="@+id/button_home"
+    <LinearLayout
+        android:id="@+id/clock_hub_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Home" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="@drawable/rounded_blue_circle"
+        android:focusable="true"
+        android:clickable="true">
+        
+        <TextView
+            android:id="@+id/clock_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10:23 AM"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+            
+        <Button
+            android:id="@+id/button_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X"
+            android:textColor="#FFFFFF"
+            android:background="@android:color/transparent"
+            android:textSize="14sp" />
+            
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_recent"
+    <LinearLayout
+        android:id="@+id/ribbons_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Recent" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginStart="-10dp"
+        android:paddingStart="10dp">
         
-    <Button
-        android:id="@+id/button_volume_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Volume" />
+        <LinearLayout
+            android:id="@+id/ribbon_1"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#2196F3"
+            android:layout_marginEnd="5dp">
+            <Button
+                android:id="@+id/button_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:textColor="#FFFFFF"
+                android:background="@android:color/transparent"
+                android:padding="0dp"/>
+        </LinearLayout>
 
-    <SeekBar
-        android:id="@+id/volume_seekbar"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:max="255" />
+        <LinearLayout
+            android:id="@+id/ribbon_2"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#2196F3"
+            android:layout_marginEnd="5dp">
+            <Button
+                android:id="@+id/button_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recent"
+                android:textColor="#FFFFFF"
+                android:background="@android:color/transparent"
+                android:padding="0dp"/>
+        </LinearLayout>
         
-    <SeekBar
-        android:id="@+id/transparency_seekbar"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:max="255" />
+        <LinearLayout
+            android:id="@+id/ribbon_3"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#2196F3">
+            <Button
+                android:id="@+id="button_volume_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Volume"
+                android:textColor="#FFFFFF"
+                android:background="@android:color/transparent"
+                android:padding="0dp"/>
+        </LinearLayout>
         
-    <Button
-        android:id="@+id/button_resize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="-" />
-        
-    <Button
-        android:id="@+id/button_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="X" />
-        
+        <SeekBar
+            android:id="@+id/volume_seekbar"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:max="255" />
+        <SeekBar
+            android:id="@+id/transparency_seekbar"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:max="255" />
+            
+    </LinearLayout>
+
 </LinearLayout>
