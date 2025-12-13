@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val launchButton: Button = findViewById(R.id.launch_ribbon_button)
+        val settingsButton: Button = findViewById(R.id.settings_button)
         
         // 1. Check for Overlay Permission on start
         checkOverlayPermission()
@@ -32,6 +33,12 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please grant 'Display over other apps' permission.", Toast.LENGTH_LONG).show()
                 checkOverlayPermission()
             }
+        }
+        
+        // 3. Button Listener to open Settings
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -46,7 +53,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startOverlayService() {
-        // Start the Ribbon Overlay Service
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(Intent(this, OverlayService::class.java))
         } else {
@@ -55,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Ribbon Overlay Launched!", Toast.LENGTH_SHORT).show()
     }
     
-    // Resume app flow after permission request
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == OVERLAY_PERMISSION_REQUEST_CODE) {
