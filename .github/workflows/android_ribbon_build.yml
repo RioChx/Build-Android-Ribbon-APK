@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 1. Set up JDK 17 
+    # 1. Set up JDK 17
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -21,16 +21,16 @@ jobs:
         java-version: '17'
         cache: 'gradle' 
 
-    # 2. Set up Android SDK (Uses v3, the working version)
+    # 2. Set up Android SDK 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
         sdk-version: '33' 
 
-    # 3. Run Gradle Build (Uses the 'gradle' command which now executes AGP 8.3.2)
+    # 3. Run Gradle Build
     - name: Run Gradle Build
       run: |
-        # Use the plain 'gradle' command, which will execute the AGP 8.3.2 compatible build.
+        # Use the system 'gradle' command, which is now compatible with all config files.
         gradle assembleDebug
 
     # 4. Upload the resulting APK as an artifact
