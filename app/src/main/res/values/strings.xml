@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TV Box Ribbon Overlay</string>
+    <string name="accessibility_service_label">Ribbon System Actions</string>
+    <string name="accessibility_service_description">Required to activate Home and Recent buttons over all apps.</string>
+</resources>
