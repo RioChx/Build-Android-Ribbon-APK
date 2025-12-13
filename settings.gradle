@@ -6,9 +6,4 @@ pluginManagement {
     }
 }
 
-// Ensure all projects use the same root-level build file
-include ':app' 
-
-// Specify the wrapper version to ensure compatibility with AGP 8.1.1
-// We set the version to 8.5, which is more compatible than the default 9.2.1
-gradle.wrapper.distributionUrl = "https://services.gradle.org/distributions/gradle-8.5-bin.zip"
+include ':app'
