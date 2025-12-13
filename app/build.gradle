@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.tvbox.ribbonoverlay'
-    compileSdk 33
+    compileSdk rootProject.ext.compile_sdk_version 
 
     defaultConfig {
         applicationId "com.tvbox.ribbonoverlay"
-        minSdk 24
-        targetSdk 33
+        minSdk rootProject.ext.min_sdk_version
+        targetSdk rootProject.ext.target_sdk_version 
         versionCode 1
         versionName "1.0"
 
@@ -33,12 +33,9 @@ android {
 }
 
 dependencies {
-    // Dependencies required for your Android app
+    // Downgraded androidx dependencies to versions compatible with SDK 33 (Android 13)
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.8.0' // Downgraded from 1.11.0
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
