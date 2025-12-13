@@ -27,16 +27,12 @@ jobs:
       with:
         sdk-version: '33' 
 
-    # 3. Run Gradle Build (FINAL FIX: Direct wrapper call with cache cleaning)
+    # 3. Use Official Gradle Action to Handle Wrapper Execution
     - name: Run Gradle Build
-      run: |
-        # Make the wrapper executable again
-        chmod +x ./gradlew
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        arguments: assembleDebug
         
-        # Explicitly run a clean build to clear any lingering cache issues.
-        # Then run the assembleDebug command using the local wrapper.
-        ./gradlew clean assembleDebug
-
     # 4. Upload the resulting APK as an artifact
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
