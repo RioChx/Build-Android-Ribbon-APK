@@ -13,8 +13,6 @@ android {
         targetSdk rootProject.ext.target_sdk_version 
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -33,9 +31,8 @@ android {
 }
 
 dependencies {
-    // Downgraded androidx dependencies to versions compatible with SDK 33 (Android 13)
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0' // Downgraded from 1.11.0
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
