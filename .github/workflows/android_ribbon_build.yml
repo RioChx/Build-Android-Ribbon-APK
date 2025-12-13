@@ -21,20 +21,22 @@ jobs:
         java-version: '17'
         cache: 'gradle' 
 
-    # 2. Set up Android SDK
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v2
+    # 2. OFFICIAL ANDROID SETUP (Replaces old SDK setup)
+    - name: Setup Android Build Tools
+      uses: android-actions/android-setup-action@v1
       with:
-        sdk-version: '33' 
-
-    # 3. Run the build command (FINAL FIX: Use local ./gradlew script)
+        # Use the specific build tools version required by your project
+        build-tools: '33.0.0'
+        # Use the specific SDK platform version required by your project
+        api-level: '33'
+        
+    # 3. Run the build command (Use the local ./gradlew script)
     - name: Run Gradle Build
       run: |
-        # Make the wrapper executable (now that it exists)
+        # Make the wrapper executable (this step is now guaranteed to work)
         chmod +x ./gradlew
         
-        # Execute the wrapper command. This will download and use the
-        # specific version (8.5) defined in gradle-wrapper.properties
+        # Execute the wrapper command. This uses the compatible Gradle 8.5
         ./gradlew assembleDebug
 
     # 4. Upload the resulting APK as an artifact
