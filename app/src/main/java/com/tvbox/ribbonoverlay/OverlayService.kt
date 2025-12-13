@@ -31,12 +31,12 @@ class OverlayService : Service() {
     private lateinit var clockWidget: TextView
     private lateinit var ribbonContainer: LinearLayout 
     
-    // State for Resize and Color
     private val handler = Handler(Looper.getMainLooper())
     private var isExpanded = true 
     private val expandedWidth = WindowManager.LayoutParams.WRAP_CONTENT
     private val collapsedWidth = 200 // Collapsed width in pixels
     private var currentAlpha = 0xCC // Initial 80% opacity (20% transparency)
+    private val baseColor = Color.rgb(0, 0, 0) // Fixed base color (Black)
 
     private val updateClockRunnable = object : Runnable {
         override fun run() {
@@ -46,8 +46,6 @@ class OverlayService : Service() {
             handler.postDelayed(this, 1000)
         }
     }
-    
-    // Auto-hide logic has been removed as per user request.
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -61,7 +59,7 @@ class OverlayService : Service() {
         overlayView = LayoutInflater.from(this).inflate(R.layout.ribbon_overlay_layout, null)
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-        // Use TYPE_APPLICATION_OVERLAY to ensure it displays on top of all apps (Main Screen included)
+        // Use TYPE_APPLICATION_OVERLAY to ensure it displays on top of all apps/screens
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
@@ -73,7 +71,6 @@ class OverlayService : Service() {
             expandedWidth,
             WindowManager.LayoutParams.WRAP_CONTENT,
             type,
-            // Flags for overlay: NOT_FOCUSABLE, NOT_TOUCH_MODAL, LAYOUT_IN_SCREEN
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
@@ -91,10 +88,10 @@ class OverlayService : Service() {
         val volumeSeekBar = overlayView.findViewById<SeekBar>(R.id.volume_seekbar)
         val resizeButton = overlayView.findViewById<Button>(R.id.button_resize)
         val transparencySeekBar = overlayView.findViewById<SeekBar>(R.id.transparency_seekbar)
-        val closeButton = overlayView.findViewById<Button>(R.id.button_close) // New Close Button
+        val closeButton = overlayView.findViewById<Button>(R.id.button_close)
 
         // --- Set Initial Transparency ---
-        val initialColor = Color.argb(currentAlpha, 0, 0, 0)
+        val initialColor = Color.argb(currentAlpha, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor))
         ribbonContainer.background = ColorDrawable(initialColor)
 
 
@@ -171,7 +168,8 @@ class OverlayService : Service() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     currentAlpha = progress
-                    val newColor = Color.argb(currentAlpha, 0, 0, 0)
+                    // Apply new alpha (transparency) to the base color (Black)
+                    val newColor = Color.argb(currentAlpha, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor))
                     ribbonContainer.background = ColorDrawable(newColor)
                 }
             }
@@ -179,7 +177,7 @@ class OverlayService : Service() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
         
-        // Toggle transparency seekbar via Long Press on Home button (for convenience)
+        // Toggle transparency seekbar via Long Press on Home button 
         homeButton.setOnLongClickListener {
             if (transparencySeekBar.visibility == View.VISIBLE) {
                 transparencySeekBar.visibility = View.GONE
@@ -190,13 +188,13 @@ class OverlayService : Service() {
             true
         }
         
-        // 2.6 Close Button (Allows manual persistence control)
+        // 2.6 Close Button 
         closeButton.setOnClickListener {
             stopSelf()
         }
 
 
-        // 3. Enable Drag and Drop (Mouse Touch/Move)
+        // 3. Enable Drag and Drop
         overlayView.setOnTouchListener(object : View.OnTouchListener {
             private var initialX: Int = 0
             private var initialY: Int = 0
