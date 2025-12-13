@@ -6,4 +6,14 @@ pluginManagement {
     }
 }
 
+// CRITICAL FIX: Defines where Gradle should look for dependencies (the missing piece)
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "Build-Android-Ribbon-APK"
 include ':app'
