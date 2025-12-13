@@ -1,68 +1,99 @@
 package com.tvbox.ribbonoverlay
 
+import android.accessibilityservice.AccessibilityServiceInfo // <-- ADD THIS IMPORT
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.accessibility.AccessibilityManager
-import android.view.accessibility.AccessibilityServiceInfo
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
-    private val OVERLAY_PERMISSION_REQUEST_CODE = 1001
+    private val OVERLAY_PERMISSION_REQUEST_CODE = 100
+    private val ACCESSIBILITY_PERMISSION_REQUEST_CODE = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // No visual layout needed, this activity just handles permissions
-        
-        checkOverlayPermission()
-    }
+        setContentView(R.layout.activity_main)
 
-    private fun checkOverlayPermission() {
-        if (!Settings.canDrawOverlays(this)) {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName")
-            )
-            startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST_CODE)
+        // Request Overlay Permission
+        if (!hasOverlayPermission()) {
+            requestOverlayPermission()
         } else {
-            startServices()
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == OVERLAY_PERMISSION_REQUEST_CODE) {
-            if (Settings.canDrawOverlays(this)) {
-                startServices()
+            // Check and request Accessibility Service Permission
+            if (!isAccessibilityServiceEnabled()) {
+                requestAccessibilityPermission()
             } else {
-                Toast.makeText(this, "Overlay permission denied. Cannot show ribbon.", Toast.LENGTH_LONG).show()
-                finish()
+                startOverlayService()
             }
         }
     }
 
-    private fun startServices() {
-        // Start the main ribbon service
-        startForegroundService(Intent(this, OverlayService::class.java))
+    private fun hasOverlayPermission(): Boolean {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
+    }
 
-        // Check if Accessibility Service is enabled (User must do this manually on TV box)
-        val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        
-        // This checks if our accessibility service is enabled by comparing service names.
-        val isServiceEnabled = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
-            .any { it.resolveInfo.serviceInfo.name == SystemAccessibilityService::class.java.name }
+    private fun requestOverlayPermission() {
+        val intent = Intent(
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:$packageName")
+        )
+        startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST_CODE)
+    }
 
-        if (!isServiceEnabled) {
-             Toast.makeText(this, "Please enable the 'Ribbon System Actions' service in Accessibility Settings.", Toast.LENGTH_LONG).show()
-             // Guide the user to enable the Accessibility Service
-             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val enabledServices = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK) // Fixes Unresolved reference
+        for (service in enabledServices) {
+            if (service.id.contains(packageName)) {
+                return true
+            }
         }
-        
-        // Close the permission activity immediately
-        finish() 
+        return false
+    }
+
+    private fun requestAccessibilityPermission() {
+        // Directs user to the Accessibility settings page
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+        startActivity(intent)
+    }
+
+    private fun startOverlayService() {
+        if (hasOverlayPermission() && isAccessibilityServiceEnabled()) {
+            val intent = Intent(this, OverlayService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ContextCompat.startForegroundService(this, intent)
+            } else {
+                startService(intent)
+            }
+            finish()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (hasOverlayPermission()) {
+                if (!isAccessibilityServiceEnabled()) {
+                    requestAccessibilityPermission()
+                } else {
+                    startOverlayService()
+                }
+            } else {
+                // Handle permission denied
+            }
+        }
+    }
+
+    // You might want to override onResume to check accessibility status after user returns from settings
+    override fun onResume() {
+        super.onResume()
+        if (hasOverlayPermission() && isAccessibilityServiceEnabled()) {
+            startOverlayService()
+        }
     }
 }
