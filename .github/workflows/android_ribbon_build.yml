@@ -13,7 +13,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 1. Set up JDK 17
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -21,18 +20,15 @@ jobs:
         java-version: '17'
         cache: 'gradle' 
 
-    # 2. Set up Android SDK (UPDATED back to 33)
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
         sdk-version: '33' 
 
-    # 3. Run Gradle Build
     - name: Run Gradle Build
       run: |
         gradle assembleDebug
 
-    # 4. Upload the resulting APK as an artifact
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
