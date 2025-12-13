@@ -27,18 +27,12 @@ jobs:
       with:
         sdk-version: '33' 
 
-    # 3. Run the build command (THIS IS THE CORRECTED STEP)
+    # 3. Run the build command (FINAL FIX: Use system 'gradle' command)
     - name: Run Gradle Build
       run: |
-        # FIX: Manually create the 'gradlew' executable script
-        # The script now uses the wrapper JAR directly, bypassing the need for the original shell script.
-        echo '#!/bin/bash' > gradlew
-        echo 'curl -L https://raw.githubusercontent.com/gradle/gradle/master/lib/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar' >> gradlew
-        echo 'java -jar gradle/wrapper/gradle-wrapper.jar "$@"' >> gradlew
-        chmod +x gradlew
-        
-        # Now execute the newly created gradlew script
-        ./gradlew assembleDebug
+        # Use the system-provided 'gradle' command to build the debug APK. 
+        # This bypasses the need for the missing 'gradlew' script entirely.
+        gradle assembleDebug
 
     # 4. Upload the resulting APK as an artifact
     - name: Upload Debug APK
