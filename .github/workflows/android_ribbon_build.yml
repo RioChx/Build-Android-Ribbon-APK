@@ -27,12 +27,15 @@ jobs:
       with:
         sdk-version: '33' 
 
-    # 3. Run the build command (FINAL FIX: Use system 'gradle' command)
+    # 3. Run the build command (FINAL FIX: Use local ./gradlew script)
     - name: Run Gradle Build
       run: |
-        # Use the system-provided 'gradle' command to build the debug APK. 
-        # This bypasses the need for the missing 'gradlew' script entirely.
-        gradle assembleDebug
+        # Make the wrapper executable (now that it exists)
+        chmod +x ./gradlew
+        
+        # Execute the wrapper command. This will download and use the
+        # specific version (8.5) defined in gradle-wrapper.properties
+        ./gradlew assembleDebug
 
     # 4. Upload the resulting APK as an artifact
     - name: Upload Debug APK
