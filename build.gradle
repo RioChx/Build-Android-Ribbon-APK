@@ -1,14 +1,22 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// MASTER CONFIGURATION FILE - Change versions here to update the whole project.
 buildscript {
-    // Upgrading Kotlin to 2.0.0 for compatibility with Gradle 9.2.1
-    ext.kotlin_version = '2.0.0' 
+    ext {
+        // --- FINAL FIX: Setting back to your REQUIRED SDK 33 (Android 13) ---
+        compile_sdk_version = 33
+        target_sdk_version  = 33
+        min_sdk_version     = 24
+        
+        kotlin_version      = '2.0.0'
+        agp_version         = '8.3.2'
+        // ---------------------------------------------------------------------
+    }
+    
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        // Upgrading to 8.3.2 for compatibility with Gradle 9.2.1
-        classpath "com.android.tools.build:gradle:8.3.2" 
+        classpath "com.android.tools.build:gradle:$agp_version" 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
