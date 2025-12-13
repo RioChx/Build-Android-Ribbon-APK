@@ -1,14 +1,12 @@
 // MASTER CONFIGURATION FILE - Change versions here to update the whole project.
 buildscript {
     ext {
-        // --- FINAL FIX: Setting back to your REQUIRED SDK 33 (Android 13) ---
         compile_sdk_version = 33
         target_sdk_version  = 33
         min_sdk_version     = 24
         
         kotlin_version      = '2.0.0'
         agp_version         = '8.3.2'
-        // ---------------------------------------------------------------------
     }
     
     repositories {
