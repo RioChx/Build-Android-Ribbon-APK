@@ -1,23 +1,19 @@
 name: Build Android Ribbon APK
 
 on:
-  # Trigger this workflow when code is pushed to the 'main' branch
   push:
     branches: [ main ]
-  # Allows you to manually trigger the workflow from the 'Actions' tab
   workflow_dispatch:
 
 jobs:
   build:
-    # Runs the job on a fresh, Ubuntu-based virtual machine
     runs-on: ubuntu-latest
     
     steps:
-    # 1. Checkout: Get your source code from the repository
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. Set up JDK (The VM installs it)
+    # 1. Set up JDK 17
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -25,22 +21,26 @@ jobs:
         java-version: '17'
         cache: 'gradle' 
 
-    # 3. Set up Android SDK (The VM installs the correct tools for API 33)
+    # 2. Set up Android SDK
     - name: Setup Android SDK
       uses: android-actions/setup-android@v2
       with:
         sdk-version: '33' 
 
-    # 4. Run the build command using the Gradle Wrapper
+    # 3. Run the build command (THIS IS THE CORRECTED STEP)
     - name: Run Gradle Build
       run: |
-        # Make the wrapper executable (this is important for Linux/GitHub VM)
-        chmod +x ./gradlew
+        # FIX: Manually create the 'gradlew' executable script
+        # The script now uses the wrapper JAR directly, bypassing the need for the original shell script.
+        echo '#!/bin/bash' > gradlew
+        echo 'curl -L https://raw.githubusercontent.com/gradle/gradle/master/lib/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar' >> gradlew
+        echo 'java -jar gradle/wrapper/gradle-wrapper.jar "$@"' >> gradlew
+        chmod +x gradlew
         
-        # Execute the build command (the final step!)
+        # Now execute the newly created gradlew script
         ./gradlew assembleDebug
 
-    # 5. Upload the resulting APK as an artifact for you to download
+    # 4. Upload the resulting APK as an artifact
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
