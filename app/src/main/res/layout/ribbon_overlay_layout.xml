@@ -16,18 +16,15 @@
         android:orientation="vertical"
         android:gravity="center"
         android:padding="10dp"
-        android:background="@drawable/rounded_blue_circle"
+        android:background="@drawable/watch_face_bg"
         android:focusable="true"
         android:clickable="true">
         
-        <TextView
-            android:id="@+id/clock_widget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10:23 AM"
-            android:textColor="#FFFFFF"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+        <AnalogClock
+            android:id="@+id/analog_clock_widget"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:padding="5dp" />
             
         <Button
             android:id="@+id/button_close"
